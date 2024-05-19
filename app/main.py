@@ -1,12 +1,16 @@
 from fastapi import FastAPI
 
-from .Routers.UsersRouter.FetchUserRouter import router as fetch_user_router
-from .Routers.UsersRouter.StoreUserRouter import router as store_user_router
-from .Routers.UsersRouter.FindUserRouter import router as find_user_router
+from app.routers.users_router.fetch_user_router import router as fetch_user_router
+from app.routers.users_router.store_user_router import router as store_user_router
+from app.routers.users_router.find_user_router import router as find_user_router
+from app.routers.scraping_router.store_scraping import router as store_scraping
 
 app = FastAPI()
 
-# Users
+# users
 app.include_router(fetch_user_router)
 app.include_router(store_user_router)
 app.include_router(find_user_router)
+
+# scraping
+app.include_router(store_scraping)

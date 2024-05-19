@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
-from app.Models.User import User
-from app.Schemas.UserSchema import UserSchemaCreate
+from app.models.user import User
+from app.schemas.user_schema import UserSchemaCreate
 
 class UserRepository:
     def get_user(self, db: Session, user_id: int):
