@@ -6,7 +6,7 @@ from app.repositories.user.user_repository import UserRepository
 
 router = APIRouter()
     
-@router.get("/users/", response_model=list[UserSchema])
+@router.get("/users/", response_model=list[UserSchema], tags=['ユーザー'])
 def read_users(
     skip: int = 0,
     limit: int = 100,

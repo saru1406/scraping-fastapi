@@ -6,7 +6,7 @@ from app.repositories.user.user_repository import UserRepository
 
 router = APIRouter()
 
-@router.post("/users/", response_model=UserSchema)
+@router.post("/users/", response_model=UserSchema, tags=['ユーザー'])
 def create_user(
     user: UserSchemaCreate, 
     db: Session = Depends(get_db),

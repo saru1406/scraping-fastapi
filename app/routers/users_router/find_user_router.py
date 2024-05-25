@@ -6,7 +6,7 @@ from app.repositories.user.user_repository import UserRepository
 
 router = APIRouter()
 
-@router.get("/users/{user_id}", response_model=UserSchema)
+@router.get("/users/{user_id}", response_model=UserSchema, tags=['ユーザー'])
 def read_user(user_id: int, db: Session = Depends(get_db)):
     db_user = UserRepository.get_user(db, user_id=user_id)
     if db_user is None:
