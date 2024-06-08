@@ -13,3 +13,6 @@ migrate:
 fresh:
 	docker compose exec app alembic downgrade base
 	docker compose exec app alembic upgrade head
+
+history:
+	docker compose exec app alembic history

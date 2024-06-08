@@ -5,8 +5,7 @@ from fastapi import FastAPI
 
 app = FastAPI()
 
-SQLALCHEMY_DATABASE_URL = "mysql+pymysql://fastapi:password@db/fastapi"
-# SQLALCHEMY_DATABASE_URL = "postgresql://user:password@postgresserver/db"
+SQLALCHEMY_DATABASE_URL = "mysql+pymysql://fastapi:password@db/fastapi?charset=utf8mb4"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL
@@ -22,4 +21,3 @@ def get_db():
         yield db
     finally:
         db.close()
-

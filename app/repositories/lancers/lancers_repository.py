@@ -76,9 +76,3 @@ class LancersRepository:
                     
                     page += 1
 
-        print(all_title)
-        print(all_link)
-        print(all_tags)
-        print(all_price)
-        print(all_limit)
-        print(all_show)

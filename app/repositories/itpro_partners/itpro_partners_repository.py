@@ -54,11 +54,5 @@ class ItproPartnersRepository:
                         break
                     
                 page += 1
-                
-        print(all_title)
-        print(all_link)
-        print(all_tags)
-        print(all_price)
-        print(all_show)
         
-        return (all_title, all_link, all_tags, all_price, all_show)
+        return {'titles': all_title, 'links': all_link, 'tags': all_tags, 'prices': all_price, 'show': all_show}

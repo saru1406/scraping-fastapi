@@ -8,3 +8,4 @@ class StoreLnacersUsecase:
     
     async def execute(self, db: Session):
         await self.lancers_repository.fetch_lancers()
+        
