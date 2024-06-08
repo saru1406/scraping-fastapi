@@ -1,6 +1,4 @@
-import requests
 import aiohttp
-import asyncio
 from bs4 import BeautifulSoup
 
 class LancersRepository:
@@ -20,7 +18,7 @@ class LancersRepository:
         all_limit = []
         
         async with aiohttp.ClientSession() as session:
-            # while True:
+            while True:
                 async with session.get(url + str(page)) as response:
                     text = await response.text()
                     soup = BeautifulSoup(text, 'html.parser')
@@ -51,6 +49,8 @@ class LancersRepository:
                         if job_prices:
                             job_price = job_prices.get_text(strip=True)
                             all_price.append(job_price)
+                        else:
+                            all_price.append(None)
                             
                         # 応募数取得
                         job_limits = job.find('div', class_='p-search-job-media__job-status')
@@ -58,6 +58,10 @@ class LancersRepository:
                             job_limit = job_limits.find('div', class_='c-media__job-stats-item')
                             if job_limit:
                                 all_limit.append(job_limit.get_text(strip=True))
+                            else:
+                                all_limit.append(None)
+                        else:
+                            all_limit.append(None)
                                 
                         # タグ取得
                         job_tags = job.find('ul', class_='p-search-job__divisions')
@@ -66,9 +70,9 @@ class LancersRepository:
                         else:
                             all_tags.append(None)
                     
-                    # next_page_link = soup.find('div', class_='c-pager__sub')
-                    # if not next_page_link:
-                    #     break
+                    next_page_link = soup.find('div', class_='c-pager__sub')
+                    if not next_page_link:
+                        break
                     
                     page += 1
 
