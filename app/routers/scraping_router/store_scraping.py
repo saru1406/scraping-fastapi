@@ -3,9 +3,9 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 import asyncio
 
-from app.usecase.crowdworks.store_crowdworks_usecase import StoreCrowdWorksUsecase
-from app.usecase.lancers.store_lancers_usecase import StoreLnacersUsecase
-from app.usecase.itpro_partners.store_itpro_partners_usecase import StoreItproPartnersUsecase
+from app.usecase.crawler.crowdworks_usecase import StoreCrowdWorksUsecase
+from app.usecase.crawler.lancers_usecase import StoreLnacersUsecase
+from app.usecase.crawler.itpro_partners_usecase import StoreItproPartnersUsecase
 
 router = APIRouter()
 
@@ -21,4 +21,5 @@ async def store_scraping(
         store_itpro_partners.execute(db)
         # store_crowdworks_usecase.execute(db)
     )
+    db.commit()
     return "更新完了"

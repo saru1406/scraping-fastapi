@@ -40,7 +40,7 @@ class LancersRepository:
                             for job_show in job_shows:
                                 job_show_ui = job_show.find('ul')
                                 if job_show_ui:
-                                    pass
+                                    all_show.append(None)
                                 else:
                                     all_show.append(job_show.get_text(strip=True))
                                 
@@ -76,3 +76,4 @@ class LancersRepository:
                     
                     page += 1
 
+            return {'titles': all_title, 'links': all_link, 'tags': all_tags, 'prices': all_price, 'show': all_show, 'limits': all_limit}
