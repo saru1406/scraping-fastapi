@@ -2,12 +2,12 @@ from abc import ABC, abstractmethod
 from sqlalchemy.orm import Session
 from typing import List, Optional
 
-from app.repositories.scraping.scraping_repository import ScrapingRepository
+from app.repositories.job.job_repository import JobRepository
 from app.models.job import Job
 
 class CrawlerBaseUsecase(ABC):
-    def __init__(self, scraping_repository: ScrapingRepository) -> None:
-        self.scraping_repository = scraping_repository
+    def __init__(self, job_repository: JobRepository) -> None:
+        self.job_repository = job_repository
     
     async def store(
         self,
@@ -41,5 +41,5 @@ class CrawlerBaseUsecase(ABC):
                 for j in range(len(chunk_titles))
             ]
 
-            await self.scraping_repository.store(db, job_objects)
+            await self.job_repository.store(db=db, job_objects=job_objects)
             

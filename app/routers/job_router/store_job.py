@@ -9,16 +9,16 @@ from app.usecase.crawler.itpro_partners_usecase import StoreItproPartnersUsecase
 
 router = APIRouter()
 
-@router.get("/scraping", tags=['スクレイピング'])
-async def store_scraping(
+@router.get("/scraping", tags=['案件スクレイピング'])
+async def store_job(
     db: Session = Depends(get_db),
     store_crowdworks_usecase: StoreCrowdWorksUsecase = Depends(StoreCrowdWorksUsecase),
     store_lancers_usecase: StoreLnacersUsecase = Depends(StoreLnacersUsecase),
     store_itpro_partners: StoreItproPartnersUsecase = Depends(StoreItproPartnersUsecase)
 ):
     await asyncio.gather(
-        store_lancers_usecase.execute(db),
-        store_itpro_partners.execute(db)
+        store_lancers_usecase.execute(db=db),
+        store_itpro_partners.execute(db=db)
         # store_crowdworks_usecase.execute(db)
     )
     db.commit()

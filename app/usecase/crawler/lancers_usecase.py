@@ -2,16 +2,16 @@ from sqlalchemy.orm import Session
 from fastapi import Depends
 
 from app.repositories.lancers.lancers_repository import LancersRepository
-from app.repositories.scraping.scraping_repository import ScrapingRepository
+from app.repositories.job.job_repository import JobRepository
 from app.usecase.crawler.crawler_base_usecase import CrawlerBaseUsecase
 
 class StoreLnacersUsecase(CrawlerBaseUsecase):
     def __init__(
         self,
         lancers_repository: LancersRepository = Depends(LancersRepository),
-        scraping_repository: ScrapingRepository = Depends(ScrapingRepository)
+        job_repository: JobRepository = Depends(JobRepository)
     ) -> None:
-        super().__init__(scraping_repository)
+        super().__init__(job_repository)
         self.lancers_repository = lancers_repository
     
     async def execute(self, db: Session):
@@ -26,4 +26,4 @@ class StoreLnacersUsecase(CrawlerBaseUsecase):
 
         length = len(titles)
         
-        await self.store(db, length, titles=titles, links=links, tags=tags, prices=prices, shows=shows, limits=limits)
+        await self.store(db=db, length=length, titles=titles, links=links, tags=tags, prices=prices, shows=shows, limits=limits)
