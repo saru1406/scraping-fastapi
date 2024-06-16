@@ -1,11 +1,9 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from fastapi import FastAPI
+import os
 
-app = FastAPI()
-
-SQLALCHEMY_DATABASE_URL = "mysql+pymysql://fastapi:password@db/fastapi?charset=utf8mb4"
+SQLALCHEMY_DATABASE_URL = f"mysql+pymysql://{os.getenv('MYSQL_USER')}:{os.getenv('MYSQL_PASSWORD')}@{os.getenv('MYSQL_HOST')}/{os.getenv('MYSQL_DATABASE')}?charset=utf8mb4"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL

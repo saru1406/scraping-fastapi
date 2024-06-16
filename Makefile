@@ -1,9 +1,16 @@
 setup:
 	docker compose up -d --build
+	docker compose exec app alembic upgrade head
+
 shell:
 	docker compose exec app bash
+
+build:
+	docker compose up -d --build
+
 up:
 	docker compose up -d
+
 down:
 	docker compose down
 
