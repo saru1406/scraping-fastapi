@@ -9,15 +9,17 @@ services:
       - .:/code
     depends_on:
       - db
+    env_file:
+      - .env
     command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80", "--reload"]
 
   db:
     image: mysql:5.7
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: fastapi
+      MYSQL_USER: fastapi
+      MYSQL_PASSWORD: password
     ports:
       - "3306:3306"
     volumes:
@@ -27,5 +29,14 @@ services:
       "--collation-server=utf8mb4_unicode_ci"
     ]
 
+  qdrant:
+    image: qdrant/qdrant
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - ./qdrant_storage:/qdrant/storage:z
+
 volumes:
   mysql_data:
+  qdrant_storage:

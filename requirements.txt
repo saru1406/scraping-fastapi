@@ -10,3 +10,5 @@ requests==2.31.0
 beautifulsoup4
 aiohttp
 python-dotenv
+faiss-cpu
+sentence-transformers
