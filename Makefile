@@ -23,3 +23,7 @@ fresh:
 
 history:
 	docker compose exec app alembic history
+
+format:
+	docker-compose exec app black .
+	docker-compose exec app isort .

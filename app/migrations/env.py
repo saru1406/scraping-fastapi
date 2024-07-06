@@ -1,9 +1,11 @@
-from logging.config import fileConfig
-from sqlalchemy import create_engine, pool
-from alembic import context
-from app.database import Base
 import os
+from logging.config import fileConfig
+
+from alembic import context
 from dotenv import load_dotenv
+from sqlalchemy import create_engine, pool
+
+from app.database import Base
 
 # Load environment variables from .env file
 load_dotenv()
@@ -24,12 +26,13 @@ if config.config_file_name is not None:
 target_metadata = Base.metadata
 
 # Getting the database URL from the environment variable
-database_url = os.getenv('DATABASE_URL')
+database_url = os.getenv("DATABASE_URL")
 
 if not database_url:
     raise ValueError("No DATABASE_URL set for Alembic configuration")
 
-config.set_main_option('sqlalchemy.url', database_url)
+config.set_main_option("sqlalchemy.url", database_url)
+
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.
@@ -52,6 +55,7 @@ def run_migrations_offline() -> None:
     with context.begin_transaction():
         context.run_migrations()
 
+
 def run_migrations_online() -> None:
     """Run migrations in 'online' mode.
 
@@ -64,13 +68,11 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
-        context.configure(
-            connection=connection,
-            target_metadata=target_metadata
-        )
+        context.configure(connection=connection, target_metadata=target_metadata)
 
         with context.begin_transaction():
             context.run_migrations()
+
 
 if context.is_offline_mode():
     run_migrations_offline()

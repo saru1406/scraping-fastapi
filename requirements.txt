@@ -13,3 +13,5 @@ python-dotenv
 faiss-cpu
 sentence-transformers
 qdrant-client
+black
+isort

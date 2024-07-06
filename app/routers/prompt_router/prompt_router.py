@@ -1,16 +1,17 @@
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
-from app.database import get_db
-
-from sentence_transformers import SentenceTransformer
-import numpy as np
 import faiss
+import numpy as np
+from fastapi import APIRouter, Depends, HTTPException
+from sentence_transformers import SentenceTransformer
+from sqlalchemy.orm import Session
+
+from app.database import get_db
 
 router = APIRouter()
 
-@router.post("/prompt", tags=['prompt'])
+
+@router.post("/prompt", tags=["prompt"])
 def prompt():
-    model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
+    model = SentenceTransformer("paraphrase-MiniLM-L6-v2")
     sentences = ["私は山田太郎です。", "私は田中花子です。", "これはテスト文章です。"]
     sentence_vectors = model.encode(sentences)
     # ベクトルの次元数を取得

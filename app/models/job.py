@@ -1,5 +1,7 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Text
+
 from app.database import Base
+
 
 class Job(Base):
     __tablename__ = "jobs"
