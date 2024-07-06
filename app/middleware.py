@@ -1,12 +1,14 @@
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .main import app
 from dotenv import load_dotenv
 import os
 
 load_dotenv()
 
+app = FastAPI()
+
 origins = [
-    os.getenv("CORS"),
+    os.getenv('FRONT_URL')
 ]
 
 app.add_middleware(

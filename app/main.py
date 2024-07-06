@@ -1,20 +1,20 @@
-from.setting import app
+from app.middleware import app
 
-from app.routers.users_router.fetch_user_router import router as fetch_user_router
-from app.routers.users_router.store_user_router import router as store_user_router
-from app.routers.users_router.find_user_router import router as find_user_router
-from app.routers.job_router.store_job import router as store_job
-from app.routers.job_router.fetch_job import router as fetch_job
-from app.routers.prompt_router.prompt_router import router as prompt
+from app.routers.users_router import fetch_user_router
+from app.routers.users_router import store_user_router
+from app.routers.users_router import find_user_router
+from app.routers.job_router import store_job
+from app.routers.job_router import fetch_job
+from app.routers.prompt_router import prompt_router
 
 #users
-app.include_router(fetch_user_router)
-app.include_router(store_user_router)
-app.include_router(find_user_router)
+app.include_router(fetch_user_router.router)
+app.include_router(store_user_router.router)
+app.include_router(find_user_router.router)
 
 #job
-app.include_router(store_job)
-app.include_router(fetch_job)
+app.include_router(store_job.router)
+app.include_router(fetch_job.router)
 
 # prompt
-app.include_router(prompt)
+app.include_router(prompt_router.router)
