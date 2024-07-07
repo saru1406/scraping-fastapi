@@ -3,9 +3,9 @@ import numpy as np
 from fastapi import APIRouter, Depends, HTTPException
 from sentence_transformers import SentenceTransformer
 from sqlalchemy.orm import Session
-from app.repositories.qdrant.qdrant_repository import QdrantRepository
 
 from app.database import get_db
+from app.repositories.qdrant.qdrant_repository import QdrantRepository
 
 router = APIRouter()
 
@@ -23,4 +23,4 @@ def prompt(qdrant_repository: QdrantRepository = Depends(QdrantRepository)):
     # index.add(sentence_vectors)
     # faiss.write_index(index, "faiss_index_ivf.bin")
 
-    qdrant_repository.create_collection('test', vector_size)
+    qdrant_repository.create_collection("test", vector_size)
