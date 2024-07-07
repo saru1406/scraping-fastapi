@@ -7,6 +7,7 @@ services:
       - .:/code
     depends_on:
       - db
+      - qdrant
     env_file:
       - .env
     command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80", "--reload"]
@@ -37,4 +38,4 @@ services:
 
 volumes:
   mysql_data:
-  qdrant_storage:
+  qdrant_data:
