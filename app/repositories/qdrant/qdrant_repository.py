@@ -29,11 +29,16 @@ class QdrantRepository:
         )
 
     def store_qdrant(self, vectors: list, text: str):
-        operation_info = self.client.upsert(
+        self.client.upsert(
             collection_name="test_collection",
             wait=True,
             points=[
                 PointStruct(id=1, vector=vectors, payload={"name": text}),
             ],
         )
-        return operation_info
+
+    def search_qdrant(cls, vector: list, limit: int = 1):
+        results = cls.client.search(
+            collection_name="test_collection", query_vector=vector, limit=limit
+        )
+        return results

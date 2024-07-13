@@ -12,5 +12,4 @@ async def fetch_job(
     job_usecase: FetchJobUsecase = Depends(FetchJobUsecase),
     db: Session = Depends(get_db),
 ):
-    jobs = await job_usecase.fetch(db=db)
-    return jobs
+    return await job_usecase.fetch(db=db)
