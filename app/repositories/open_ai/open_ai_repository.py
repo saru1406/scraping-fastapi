@@ -43,7 +43,7 @@ class OpenAiReposiotry:
         )
         print(response.choices[0].message.function_call.name)
         return response.choices[0].message
-    
+
     def fetch_rag_chat(self, text: str):
         open_ai = OpenAI(api_key=os.getenv("OPEN_AI"))
         response = open_ai.chat.completions.create(
@@ -54,6 +54,6 @@ class OpenAiReposiotry:
                     "content": "ユーザーの質問に対して親切にサポートを提供してください。",
                 },
                 {"role": "user", "content": text},
-            ]
+            ],
         )
         return response.choices[0].message.content
