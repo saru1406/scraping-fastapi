@@ -23,28 +23,24 @@ class OpenAiReposiotry:
             functions=[
                 {
                     "name": "search_qdrant",
-                    "description": "個人情報に関してを提供します",
+                    "description": "フリーランス・副業案件について提供します",
                     "parameters": {
                         "type": "object",
                         "properties": {
                             "text": {
                                 "type": "string",
-                                "description": "個人情報に関して",
+                                "description": "フリーランス・副業案件について提供します",
                             }
                         },
                         "required": ["text"],
                     },
                 }
             ],
-            function_call={
-                "name": "search_qdrant",
-                "arguments": {"text": "motivation"},
-            },
         )
-        print(response.choices[0].message.function_call.name)
+        print(response.choices[0].message)
         return response.choices[0].message
 
-    def fetch_rag_chat(self, text: str):
+    def fetch_rag_chat(self, text: str, db_response):
         open_ai = OpenAI(api_key=os.getenv("OPEN_AI"))
         response = open_ai.chat.completions.create(
             model="gpt-3.5-turbo",
@@ -54,6 +50,8 @@ class OpenAiReposiotry:
                     "content": "ユーザーの質問に対して親切にサポートを提供してください。",
                 },
                 {"role": "user", "content": text},
+                {"role": "assistant", "content": db_response}
             ],
         )
+        print(response.choices)
         return response.choices[0].message.content

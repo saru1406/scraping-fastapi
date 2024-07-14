@@ -28,12 +28,12 @@ class QdrantRepository:
             vectors_config=VectorParams(size=self.size, distance=distance),
         )
 
-    def store_qdrant(self, vectors: list, text: str):
+    def store_qdrant(self, id: int, vectors: list, text: str):
         self.client.upsert(
             collection_name="test_collection",
             wait=True,
             points=[
-                PointStruct(id=1, vector=vectors, payload={"name": text}),
+                PointStruct(id=id, vector=vectors, payload={"name": text}),
             ],
         )
 
