@@ -86,7 +86,7 @@ class LancersRepository:
                     if not next_page_link:
                         break
 
-                    page += 1
+                    page += 100
 
             return {
                 "titles": all_title,

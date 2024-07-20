@@ -21,9 +21,23 @@ class FetchPrompt:
         print(response.function_call)
         if response.function_call:
             vector = self.vector_service.create_vector(text)
-            qdrant_response = self.qdrant_repository.search_qdrant(vector, 1)
-            print(qdrant_response[0].payload['name'])
+            qdrant_responses = self.qdrant_repository.search_qdrant(vector, 5)
+            print(qdrant_responses)
+
+            n = 1
+            full_text = ""
+            for qdrant_response in qdrant_responses:
+                number = f"{n}件目 \n"
+                title = f"案件名:{qdrant_response.payload['案件名'][0]} \n"
+                show = f"案件詳細:{qdrant_response.payload['案件詳細'][0]} \n"
+                url = f"URL:{qdrant_response.payload['URL'][0]}"
+                full_text += f"{number}{title}{show}\n{url}"
+
+                n += 1
+
+            print(full_text)
+
             if qdrant_response:
-                return self.open_ai_repository.fetch_rag_chat(text, qdrant_response[0].payload['name'])
+                return self.open_ai_repository.fetch_rag_chat(text, full_text)
 
         return response.content

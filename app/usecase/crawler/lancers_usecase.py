@@ -3,9 +3,9 @@ from sqlalchemy.orm import Session
 
 from app.repositories.job.job_repository import JobRepository
 from app.repositories.lancers.lancers_repository import LancersRepository
-from app.usecase.crawler.crawler_base_usecase import CrawlerBaseUsecase
 from app.repositories.qdrant.qdrant_repository import QdrantRepository
 from app.services.vector_service import VectorService
+from app.usecase.crawler.crawler_base_usecase import CrawlerBaseUsecase
 
 
 class StoreLnacersUsecase(CrawlerBaseUsecase):
@@ -43,11 +43,12 @@ class StoreLnacersUsecase(CrawlerBaseUsecase):
             shows=shows,
             limits=limits,
         )
-        
-        id = 1
-        for title in titles:
-            vector_title = self.vector_servise.create_vector(title)
-            self.qdrant_repository.store_qdrant(id, vector_title, title)
-            id += 1
 
-        
+        id = 1
+        self.qdrant_repository.create_collection(collection_name="job_collection")
+        for title, show, link in zip(titles, shows, links):
+            title_show = f"案件名: {title}, 案件詳細: {show}, URL: {link}"
+            print(title_show)
+            vector = self.vector_servise.create_vector(title_show)
+            self.qdrant_repository.store_qdrant(id, vector, title, show, link)
+            id += 1

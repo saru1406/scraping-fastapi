@@ -12,7 +12,7 @@ class OpenAiReposiotry:
     def fetch_farst_chat(self, text: str):
         open_ai = OpenAI(api_key=os.getenv("OPEN_AI"))
         response = open_ai.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4o-mini",
             messages=[
                 {
                     "role": "system",
@@ -43,14 +43,14 @@ class OpenAiReposiotry:
     def fetch_rag_chat(self, text: str, db_response):
         open_ai = OpenAI(api_key=os.getenv("OPEN_AI"))
         response = open_ai.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4o-mini",
             messages=[
                 {
                     "role": "system",
-                    "content": "ユーザーの質問に対して親切にサポートを提供してください。",
+                    "content": f"以下はデータベースから取得した情報です。\n {db_response} \n これを元にユーザーの質問に答えてください。URLは必ず表示させてください。",
                 },
                 {"role": "user", "content": text},
-                {"role": "assistant", "content": db_response}
+                # {"role": "assistant", "content": db_response},
             ],
         )
         print(response.choices)

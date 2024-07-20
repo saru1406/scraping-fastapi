@@ -14,6 +14,7 @@ def fetch_prompt(
     response_gpt = prompt_usecase.fetch(request.text)
     return {"text": response_gpt}
 
+
 @router.post("/chat", tags=["gpt"])
 def fetch_chat(
     request: PromptSchema,

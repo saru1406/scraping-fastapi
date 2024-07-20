@@ -28,17 +28,18 @@ class QdrantRepository:
             vectors_config=VectorParams(size=self.size, distance=distance),
         )
 
-    def store_qdrant(self, id: int, vectors: list, text: str):
+    def store_qdrant(self, id: int, vectors: list, title: str, show: str, url: str):
+        payload = {"案件名": {title}, "案件詳細": {show}, "URL": {url}}
         self.client.upsert(
-            collection_name="test_collection",
+            collection_name="job_collection",
             wait=True,
             points=[
-                PointStruct(id=id, vector=vectors, payload={"name": text}),
+                PointStruct(id=id, vector=vectors, payload=payload),
             ],
         )
 
     def search_qdrant(cls, vector: list, limit: int = 1):
         results = cls.client.search(
-            collection_name="test_collection", query_vector=vector, limit=limit
+            collection_name="job_collection", query_vector=vector, limit=limit
         )
         return results
