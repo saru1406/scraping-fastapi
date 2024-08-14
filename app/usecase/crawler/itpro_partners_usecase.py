@@ -4,6 +4,8 @@ from sqlalchemy.orm import Session
 from app.repositories.itpro_partners.itpro_partners_repository import \
     ItproPartnersRepository
 from app.repositories.job.job_repository import JobRepository
+from app.repositories.qdrant.qdrant_repository import QdrantRepository
+from app.services.vector_service import VectorService
 from app.usecase.crawler.crawler_base_usecase import CrawlerBaseUsecase
 
 
@@ -14,9 +16,13 @@ class StoreItproPartnersUsecase(CrawlerBaseUsecase):
             ItproPartnersRepository
         ),
         job_repository: JobRepository = Depends(JobRepository),
+        qdrant_repository: QdrantRepository = Depends(QdrantRepository),
+        vector_servise: VectorService = Depends(VectorService),
     ) -> None:
-        super().__init__(job_repository)
         self.itpro_partners_repository = itpro_partners_repository
+        self.qdrant_repository = qdrant_repository
+        self.vector_servise = vector_servise
+        self.job_repository = job_repository
 
     async def execute(self, db: Session):
         itpro_partners_datas = (
@@ -40,3 +46,11 @@ class StoreItproPartnersUsecase(CrawlerBaseUsecase):
             prices=prices,
             shows=shows,
         )
+        
+        fetch_itpro_partners = await self.job_repository.fetch(db=db)
+
+        self.qdrant_repository.create_collection(collection_name="job_collection")
+        for itpro_partners in fetch_itpro_partners:
+            title_show = f"案件名: {itpro_partners.title}, 案件詳細: {itpro_partners.show}, URL: {itpro_partners.link}"
+            vector = self.vector_servise.create_vector(title_show)
+            self.qdrant_repository.store_qdrant(itpro_partners.id, vector, itpro_partners.title, itpro_partners.show, itpro_partners.link)

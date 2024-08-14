@@ -19,7 +19,7 @@ class ItproPartnersRepository:
                 async with session.get(url + str(page)) as response:
                     text = await response.text()
                     soup = BeautifulSoup(text, "html.parser")
-                    jobs = soup.find_all("div", "c-job-card__inner")
+                    jobs = soup.find_all("div", class_="c-job-card pc-show")
                     for job in jobs:
                         title = job.find("h3", class_="c-job-card__title")
                         all_title.append(title.get_text(strip=True))

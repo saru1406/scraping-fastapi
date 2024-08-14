@@ -16,10 +16,10 @@ class StoreLnacersUsecase(CrawlerBaseUsecase):
         qdrant_repository: QdrantRepository = Depends(QdrantRepository),
         vector_servise: VectorService = Depends(VectorService),
     ) -> None:
-        super().__init__(job_repository)
         self.lancers_repository = lancers_repository
         self.qdrant_repository = qdrant_repository
         self.vector_servise = vector_servise
+        self.job_repository = job_repository
 
     async def execute(self, db: Session):
         lancers_dates = await self.lancers_repository.fetch_lancers()
@@ -43,12 +43,11 @@ class StoreLnacersUsecase(CrawlerBaseUsecase):
             shows=shows,
             limits=limits,
         )
+        
+        fetch_lancers = await self.job_repository.fetch(db=db)
 
-        id = 1
         self.qdrant_repository.create_collection(collection_name="job_collection")
-        for title, show, link in zip(titles, shows, links):
-            title_show = f"案件名: {title}, 案件詳細: {show}, URL: {link}"
-            print(title_show)
+        for lancers in fetch_lancers:
+            title_show = f"案件名: {lancers.title}, 案件詳細: {lancers.show}, URL: {lancers.link}"
             vector = self.vector_servise.create_vector(title_show)
-            self.qdrant_repository.store_qdrant(id, vector, title, show, link)
-            id += 1
+            self.qdrant_repository.store_qdrant(lancers.id, vector, lancers.title, lancers.show, lancers.link)

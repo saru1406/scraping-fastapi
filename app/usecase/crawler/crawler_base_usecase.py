@@ -44,3 +44,4 @@ class CrawlerBaseUsecase(ABC):
             ]
 
             await self.job_repository.store(db=db, job_objects=job_objects)
+            db.flush()
