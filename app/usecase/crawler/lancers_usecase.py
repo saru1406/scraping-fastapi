@@ -43,11 +43,9 @@ class StoreLnacersUsecase(CrawlerBaseUsecase):
             shows=shows,
             limits=limits,
         )
-        
-        fetch_lancers = await self.job_repository.fetch(db=db)
 
-        self.qdrant_repository.create_collection(collection_name="job_collection")
-        for lancers in fetch_lancers:
-            title_show = f"案件名: {lancers.title}, 案件詳細: {lancers.show}, URL: {lancers.link}"
-            vector = self.vector_servise.create_vector(title_show)
-            self.qdrant_repository.store_qdrant(lancers.id, vector, lancers.title, lancers.show, lancers.link)
+        # self.qdrant_repository.create_collection(collection_name="job_collection")
+        # for lancers in fetch_lancers:
+        #     title_show = f"案件名: {lancers.title}, 案件詳細: {lancers.show}, URL: {lancers.link}"
+        #     vector = self.vector_servise.create_vector(title_show)
+        #     self.qdrant_repository.store_qdrant(lancers.id, vector, lancers.title, lancers.show, lancers.link)

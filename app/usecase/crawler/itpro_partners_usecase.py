@@ -46,11 +46,9 @@ class StoreItproPartnersUsecase(CrawlerBaseUsecase):
             prices=prices,
             shows=shows,
         )
-        
-        fetch_itpro_partners = await self.job_repository.fetch(db=db)
 
-        self.qdrant_repository.create_collection(collection_name="job_collection")
-        for itpro_partners in fetch_itpro_partners:
-            title_show = f"案件名: {itpro_partners.title}, 案件詳細: {itpro_partners.show}, URL: {itpro_partners.link}"
-            vector = self.vector_servise.create_vector(title_show)
-            self.qdrant_repository.store_qdrant(itpro_partners.id, vector, itpro_partners.title, itpro_partners.show, itpro_partners.link)
+        # self.qdrant_repository.create_collection(collection_name="job_collection")
+        # for itpro_partners in fetch_itpro_partners:
+        #     title_show = f"案件名: {itpro_partners.title}, 案件詳細: {itpro_partners.show}, URL: {itpro_partners.link}"
+        #     vector = self.vector_servise.create_vector(title_show)
+        #     self.qdrant_repository.store_qdrant(itpro_partners.id, vector, itpro_partners.title, itpro_partners.show, itpro_partners.link)

@@ -22,15 +22,14 @@ class FetchPrompt:
         if response.function_call:
             vector = self.vector_service.create_vector(text)
             qdrant_responses = self.qdrant_repository.search_qdrant(vector, 5)
-            print(qdrant_responses)
 
             n = 1
             full_text = ""
             for qdrant_response in qdrant_responses:
                 number = f"{n}件目 \n"
-                title = f"案件名:{qdrant_response.payload['案件名'][0]} \n"
-                show = f"案件詳細:{qdrant_response.payload['案件詳細'][0]} \n"
-                url = f"URL:{qdrant_response.payload['URL'][0]}"
+                title = f"案件名:{qdrant_response.payload['案件名']} \n"
+                show = f"案件詳細:{qdrant_response.payload['案件詳細']} \n"
+                url = f"URL:{qdrant_response.payload['URL']}"
                 full_text += f"{number}{title}{show}\n{url}"
 
                 n += 1

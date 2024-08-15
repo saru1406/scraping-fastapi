@@ -4,11 +4,11 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.database import get_db
+from app.repositories.job.job_repository import JobRepository
 from app.usecase.crawler.crowdworks_usecase import StoreCrowdWorksUsecase
 from app.usecase.crawler.itpro_partners_usecase import \
     StoreItproPartnersUsecase
 from app.usecase.crawler.lancers_usecase import StoreLnacersUsecase
-from app.repositories.job.job_repository import JobRepository
 
 router = APIRouter()
 
@@ -23,7 +23,7 @@ async def store_job(
     ),
     job_repository: JobRepository = Depends(JobRepository),
 ):
-    await job_repository.delete(db=db)
+    job_repository.delete(db=db)
     await asyncio.gather(
         store_lancers_usecase.execute(db=db),
         store_itpro_partners.execute(db=db),

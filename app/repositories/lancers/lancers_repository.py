@@ -38,7 +38,10 @@ class LancersRepository:
                         )
                         if job_link:
                             link = job_link.get("href")
-                            all_link.append(self.base_url + link)
+                            if 'http' not in link:
+                                all_link.append(self.base_url + link)
+                            else:
+                                all_link.append(link)
 
                             all_title.append(job_link.get_text(strip=True))
 

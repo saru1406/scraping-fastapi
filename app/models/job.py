@@ -13,6 +13,6 @@ class Job(Base):
     show = Column(Text)
     price = Column(String(255))
     limit = Column(String(255))
-    
+
     def __repr__(self):
         return f"Job(id={self.id}, title={self.title}, link={self.link}, tags={self.tags}, show={self.show}, price={self.price}, limit={self.limit})"

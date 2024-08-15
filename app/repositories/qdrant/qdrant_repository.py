@@ -29,10 +29,10 @@ class QdrantRepository:
         )
 
     def store_qdrant(self, id: int, vectors: list, title: str, show: str, url: str):
-        payload = {"案件名": {title}, "案件詳細": {show}, "URL": {url}}
+        payload = {"案件名": title, "案件詳細": show, "URL": url}
         self.client.upsert(
             collection_name="job_collection",
-            wait=True,
+            wait=False,
             points=[
                 PointStruct(id=id, vector=vectors, payload=payload),
             ],
