@@ -27,3 +27,6 @@ history:
 format:
 	docker-compose exec app black .
 	docker-compose exec app isort .
+
+front-shell:
+	docker compose exec frontend bash
