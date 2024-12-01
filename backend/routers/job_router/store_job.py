@@ -9,6 +9,7 @@ from backend.usecase.crawler.crowdworks_usecase import StoreCrowdWorksUsecase
 from backend.usecase.crawler.itpro_partners_usecase import \
     StoreItproPartnersUsecase
 from backend.usecase.crawler.lancers_usecase import StoreLnacersUsecase
+from backend.usecase.qdrant.qdrant_usecase import QdrantUsecase
 
 router = APIRouter()
 
@@ -22,12 +23,15 @@ async def store_job(
         StoreItproPartnersUsecase
     ),
     job_repository: JobRepository = Depends(JobRepository),
+    qdrant_usecase: QdrantUsecase = Depends(QdrantUsecase)
 ):
-    job_repository.delete(db=db)
+    await job_repository.delete(db=db)
     await asyncio.gather(
         store_lancers_usecase.execute(db=db),
         store_itpro_partners.execute(db=db),
         # store_crowdworks_usecase.execute(db)
     )
+    db.flush()
+    qdrant_usecase.store_qdrant_by_job(db=db)
     db.commit()
     return "更新完了"

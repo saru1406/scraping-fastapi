@@ -44,7 +44,7 @@ services:
       context: .
       dockerfile: infra/frontend/Dockerfile
     ports:
-      - "5173:5173"
+      - "3000:5173"
     volumes:
       - ./frontend:/frontend
 

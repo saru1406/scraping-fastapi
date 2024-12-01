@@ -8,8 +8,8 @@ router = APIRouter()
 
 
 @router.get("/jobs", tags=["案件取得"])
-async def fetch_job(
+def fetch_job(
     job_usecase: FetchJobUsecase = Depends(FetchJobUsecase),
     db: Session = Depends(get_db),
 ):
-    return await job_usecase.fetch(db=db)
+    return job_usecase.fetch(db=db)

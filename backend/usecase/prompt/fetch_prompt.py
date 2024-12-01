@@ -1,8 +1,9 @@
 from fastapi import Depends
 
-from backend.repositories.open_ai.open_ai_repository import OpenAiReposiotry
+from backend.repositories.open_ai.open_ai_repository import OpenAiRepository
 from backend.repositories.qdrant.qdrant_repository import QdrantRepository
 from backend.services.vector_service import VectorService
+import json
 
 
 class FetchPrompt:
@@ -10,17 +11,23 @@ class FetchPrompt:
         self,
         qdrant_repository: QdrantRepository = Depends(QdrantRepository),
         vector_service: VectorService = Depends(VectorService),
-        open_ai_repository: OpenAiReposiotry = Depends(OpenAiReposiotry),
+        open_ai_repository: OpenAiRepository = Depends(OpenAiRepository),
     ) -> None:
         self.qdrant_repository = qdrant_repository
         self.vector_service = vector_service
         self.open_ai_repository = open_ai_repository
 
-    def fetch(self, text: str) -> str:
-        response = self.open_ai_repository.fetch_farst_chat(text)
+    def fetch(self, text: list[object]) -> str:
+        messages = [
+        {"role": "system", "content": "ユーザーの質問に対して親切にサポートを提供してください。"}
+    ] + [{"role": t["role"], "content": t["text"]} for t in text]
+        response = self.open_ai_repository.fetch_farst_chat(messages)
         print(response.function_call)
         if response.function_call:
-            vector = self.vector_service.create_vector(text)
+            print(json.loads(response.function_call.arguments).get("text"))
+            # print(response.function_call["text"])
+            response_text = json.loads(response.function_call.arguments).get("text")
+            vector = self.vector_service.create_vector(response_text)
             qdrant_responses = self.qdrant_repository.search_qdrant(vector, 5)
 
             n = 1
@@ -37,6 +44,11 @@ class FetchPrompt:
             print(full_text)
 
             if qdrant_response:
-                return self.open_ai_repository.fetch_rag_chat(text, full_text)
+                messages.append({
+                    "role": "system",
+                    "content": f"以下はデータベースから取得した情報です。\n {full_text} \n これを元にユーザーの質問に答えてください。URLは必ず表示させてください。"
+                })
+
+                return self.open_ai_repository.fetch_rag_chat(messages)
 
         return response.content

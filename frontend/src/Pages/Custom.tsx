@@ -11,7 +11,7 @@ type Chat = {
     role: 'user' | 'assistant';
 };
 
-const ChatPage = () => {
+const CustomPage = () => {
     const [chat, setChat] = useState('');
     const [chatHistory, setChatHistory] = useState<Chat[]>([]);
     console.log(chatHistory)
@@ -74,9 +74,9 @@ const ChatPage = () => {
                     <li className="mb-8">
                         <Link to="/" className="hover:text-gray-300 text-xl">案件検索</Link>
                     </li>
-                    {/* <li className="mb-10">
+                    <li className="mb-10">
                         <Link to="/custom" className="hover:text-gray-300 text-xl">カスタム</Link>
-                    </li> */}
+                    </li>
                 </ul>
             </div>
 
@@ -84,7 +84,7 @@ const ChatPage = () => {
             <div className="flex-1 flex flex-col ml-64 p-4 h-screen">
                 {/* チャット履歴 */}
                 <div className="flex-1 overflow-y-auto">
-                    <h1 className="text-2xl font-bold mb-4">案件検索</h1>
+                    <h1 className="text-2xl font-bold mb-4">カスタム</h1>
                     {chatHistory.map((message, index) => (
                         <div
                             key={index}
@@ -130,12 +130,10 @@ const ChatPage = () => {
                     />
                     <button type="submit" className="bg-blue-500 text-white p-2 rounded">送信</button>
                 </form>
-                <div>
-                    <Link to="/index" className="text-blue-500 hover:text-blue-700">登録データ確認</Link>
-                </div>
+                <Link to="/custom-index" className="text-blue-500 hover:text-blue-700">登録データ追加・確認</Link>
             </div>
         </div>
     );
 };
 
-export default ChatPage;
+export default CustomPage;
