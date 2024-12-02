@@ -38,7 +38,7 @@ const ChatPage = () => {
 
     const postChat = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const url = 'http://localhost:80/prompts';
+        const url = import.meta.env.VITE_API_BASE_URL+'/prompts';
         try {
             const userMessage: Chat = { text: chat, role: 'user' };
             const updatedHistory = [...chatHistory, userMessage];
@@ -56,7 +56,7 @@ const ChatPage = () => {
                 const data = await response.json();
                 const botMessage: Chat = { text: data.text, role: 'assistant' };
                 setChatHistory(prev => [...prev, botMessage]);
-                setChat(''); // フォームをクリア
+                setChat('');
             } else {
                 console.error('エラーが発生しました');
             }
@@ -94,7 +94,16 @@ const ChatPage = () => {
                             <ReactMarkdown
                                 remarkPlugins={[remarkGfm, remarkBreaks]}
                                 components={{
-                                    code({ node, inline, className, children, ...props }) {
+                                    code({
+                                        inline,
+                                        className,
+                                        children,
+                                        ...props
+                                    }: {
+                                        inline?: boolean;
+                                        className?: string;
+                                        children?: React.ReactNode;
+                                    }) {
                                         const match = /language-(\w+)/.exec(className || '');
                                         return !inline && match ? (
                                             <SyntaxHighlighter
@@ -111,7 +120,7 @@ const ChatPage = () => {
                                             </code>
                                         );
                                     },
-                                }}
+                                }}            
                             >
                                 {message.text}
                             </ReactMarkdown>

@@ -94,7 +94,16 @@ const CustomPage = () => {
                             <ReactMarkdown
                                 remarkPlugins={[remarkGfm, remarkBreaks]}
                                 components={{
-                                    code({ node, inline, className, children, ...props }) {
+                                    code({
+                                        inline,
+                                        className,
+                                        children,
+                                        ...props
+                                    }: {
+                                        inline?: boolean;
+                                        className?: string;
+                                        children?: React.ReactNode;
+                                    }) {
                                         const match = /language-(\w+)/.exec(className || '');
                                         return !inline && match ? (
                                             <SyntaxHighlighter
@@ -111,7 +120,7 @@ const CustomPage = () => {
                                             </code>
                                         );
                                     },
-                                }}
+                                }}            
                             >
                                 {message.text}
                             </ReactMarkdown>

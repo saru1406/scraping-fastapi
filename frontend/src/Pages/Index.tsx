@@ -44,7 +44,7 @@ function Index() {
                     {/* <p className="lg:w-2/3 mx-auto leading-relaxed text-base">Banh mi cornhole echo park skateboard authentic crucifix neutra tilde lyft biodiesel artisan direct trade mumblecore 3 wolf moon twee</p> */}
                 </div>
                 <div className="lg:w-11/12 w-full mx-auto">
-                    <table className="table-auto table-fixed w-full text-left whitespace-no-wrap">
+                    <table className="table-fixed w-full text-left whitespace-no-wrap">
                         <thead>
                             <tr>
                                 <th className="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl w-1/4">タイトル</th>

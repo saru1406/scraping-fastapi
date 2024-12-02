@@ -18,6 +18,7 @@ function CustomIndex() {
         title: "",
         body: ""
     });
+    console.log(message)
 
     useEffect(() => {
         const fetchJobs = async () => {
