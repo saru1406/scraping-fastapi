@@ -1,67 +1,63 @@
-import React, { useState, useEffect } from "react";
-import ReactMarkdown from 'react-markdown';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { coy } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import remarkGfm from 'remark-gfm';
-import remarkBreaks from 'remark-breaks';
+import React, { useState } from "react";
+import ReactMarkdown from "react-markdown";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { coy } from "react-syntax-highlighter/dist/esm/styles/prism";
+import remarkGfm from "remark-gfm";
+import remarkBreaks from "remark-breaks";
 import { Link } from "react-router-dom";
 
 type Chat = {
     text: string;
-    role: 'user' | 'assistant';
+    role: "user" | "assistant";
 };
 
 const ChatPage = () => {
-    const [chat, setChat] = useState('');
+    const [chat, setChat] = useState("");
     const [chatHistory, setChatHistory] = useState<Chat[]>([]);
-    console.log(chatHistory)
-
-    useEffect(() => {
-        if (chatHistory.length > 0) {
-            let index = 0;
-            let messageIndex = 0;
-            const interval = setInterval(() => {
-                if (messageIndex < chatHistory.length) {
-                    if (index < chatHistory[messageIndex].text.length) {
-                        index++;
-                    } else {
-                        index = 0;
-                        messageIndex++;
-                    }
-                } else {
-                    clearInterval(interval);
-                }
-            }, 10);
-            return () => clearInterval(interval);
-        }
-    }, [chatHistory]);
+    const [streamingMessage, setStreamingMessage] = useState("");
 
     const postChat = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const url = import.meta.env.VITE_API_BASE_URL+'/prompts';
+        const url = import.meta.env.VITE_API_BASE_URL + "/prompts";
+
         try {
-            const userMessage: Chat = { text: chat, role: 'user' };
+            const userMessage: Chat = { text: chat, role: "user" };
             const updatedHistory = [...chatHistory, userMessage];
             setChatHistory(updatedHistory);
-            setChat('');
+            setChat("");
+
             const response = await fetch(url, {
-                method: 'POST',
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json',
+                    "Content-Type": "application/json",
                 },
                 body: JSON.stringify({ text: updatedHistory }),
             });
+
             if (response.ok) {
-                // サーバーからの返信を履歴に追加
                 const data = await response.json();
-                const botMessage: Chat = { text: data.text, role: 'assistant' };
-                setChatHistory(prev => [...prev, botMessage]);
-                setChat('');
+                const botMessageText = data.text;
+                setStreamingMessage("");
+
+                let index = 0;
+                const interval = setInterval(() => {
+                    if (index < botMessageText.length) {
+                        setStreamingMessage((prev) => prev + botMessageText[index]);
+                        index++;
+                    } else {
+                        clearInterval(interval);
+                        setChatHistory((prev) => [
+                            ...prev,
+                            { text: botMessageText, role: "assistant" },
+                        ]);
+                        setStreamingMessage("");
+                    }
+                }, 10);
             } else {
-                console.error('エラーが発生しました');
+                console.error("エラーが発生しました");
             }
         } catch (error) {
-            console.error('ネットワークエラーが発生しました', error);
+            console.error("ネットワークエラーが発生しました", error);
         }
     };
 
@@ -72,11 +68,10 @@ const ChatPage = () => {
                 <h2 className="text-xl font-bold mb-10">RagChat</h2>
                 <ul>
                     <li className="mb-8">
-                        <Link to="/" className="hover:text-gray-300 text-xl">案件検索</Link>
+                        <Link to="/" className="hover:text-gray-300 text-xl">
+                            案件検索
+                        </Link>
                     </li>
-                    {/* <li className="mb-10">
-                        <Link to="/custom" className="hover:text-gray-300 text-xl">カスタム</Link>
-                    </li> */}
                 </ul>
             </div>
 
@@ -88,12 +83,27 @@ const ChatPage = () => {
                     {chatHistory.map((message, index) => (
                         <div
                             key={index}
-                            className={`mt-2 mb-2 p-2 rounded-lg ${message.role === 'user' ? 'bg-blue-200 text-black ml-auto w-72' : 'bg-gray-100 text-black self-start'}`}
-                            style={{ maxWidth: '80%', whiteSpace: 'pre-wrap' }}
+                            className={`mt-2 mb-2 p-2 rounded-lg ${
+                                message.role === "user"
+                                    ? "bg-blue-200 text-black ml-auto w-72"
+                                    : "bg-gray-100 text-black self-start"
+                            }`}
+                            style={{ maxWidth: "80%", whiteSpace: "pre-wrap" }}
                         >
                             <ReactMarkdown
                                 remarkPlugins={[remarkGfm, remarkBreaks]}
                                 components={{
+                                    // カスタムリンクコンポーネント
+                                    a: ({ href, children }) => (
+                                        <a
+                                            href={href}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-blue-500 hover:text-blue-700 underline"
+                                        >
+                                            {children}
+                                        </a>
+                                    ),
                                     code({
                                         inline,
                                         className,
@@ -104,7 +114,9 @@ const ChatPage = () => {
                                         className?: string;
                                         children?: React.ReactNode;
                                     }) {
-                                        const match = /language-(\w+)/.exec(className || '');
+                                        const match = /language-(\w+)/.exec(
+                                            className || ""
+                                        );
                                         return !inline && match ? (
                                             <SyntaxHighlighter
                                                 style={coy}
@@ -112,7 +124,7 @@ const ChatPage = () => {
                                                 PreTag="div"
                                                 {...props}
                                             >
-                                                {String(children).replace(/\n$/, '')}
+                                                {String(children).replace(/\n$/, "")}
                                             </SyntaxHighlighter>
                                         ) : (
                                             <code className={className} {...props}>
@@ -120,12 +132,21 @@ const ChatPage = () => {
                                             </code>
                                         );
                                     },
-                                }}            
+                                }}
                             >
                                 {message.text}
                             </ReactMarkdown>
                         </div>
                     ))}
+                    {/* ストリーミング中のメッセージ */}
+                    {streamingMessage && (
+                        <div
+                            className="mt-2 mb-2 p-2 rounded-lg bg-gray-100 text-black self-start"
+                            style={{ maxWidth: "80%", whiteSpace: "pre-wrap" }}
+                        >
+                            {streamingMessage}
+                        </div>
+                    )}
                 </div>
 
                 {/* 入力フォーム */}
@@ -137,10 +158,14 @@ const ChatPage = () => {
                         value={chat}
                         onChange={(e) => setChat(e.target.value)}
                     />
-                    <button type="submit" className="bg-blue-500 text-white p-2 rounded">送信</button>
+                    <button type="submit" className="bg-blue-500 text-white p-2 rounded">
+                        送信
+                    </button>
                 </form>
                 <div>
-                    <Link to="/index" className="text-blue-500 hover:text-blue-700">登録データ確認</Link>
+                    <Link to="/index" className="text-blue-500 hover:text-blue-700">
+                        登録データ確認
+                    </Link>
                 </div>
             </div>
         </div>

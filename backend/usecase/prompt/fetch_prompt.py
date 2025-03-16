@@ -36,8 +36,9 @@ class FetchPrompt:
                 number = f"{n}件目 \n"
                 title = f"案件名:{qdrant_response.payload['案件名']} \n"
                 show = f"案件詳細:{qdrant_response.payload['案件詳細']} \n"
-                url = f"URL:{qdrant_response.payload['URL']}"
+                url = f"URL:{qdrant_response.payload['URL']} \n"
                 full_text += f"{number}{title}{show}\n{url}"
+                print(url)
 
                 n += 1
 
